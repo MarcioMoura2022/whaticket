@@ -1,6 +1,6 @@
-Repositorio Privado Versão Whaticket DMIX Informática
+Repositorio Versão Whaticket DMIX Informática
 
-Esta versão foi baseada no whaticket com algumas modificações!!!
+Esta versão foi baseada no whaticket do CANOVE com algumas modificações!!!
 
 Instruções de Instalação:
 
