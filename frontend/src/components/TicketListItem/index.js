@@ -22,6 +22,7 @@ import MarkdownWrapper from "../MarkdownWrapper";
 import { Tooltip } from "@material-ui/core";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import toastError from "../../errors/toastError";
+import AcceptTicketWithouSelectQueue from "../AcceptTicketWithoutQueueModal";
 
 const useStyles = makeStyles(theme => ({
 	ticket: {
@@ -109,6 +110,7 @@ const TicketListItem = ({ ticket }) => {
 	const [loading, setLoading] = useState(false);
 	const { ticketId } = useParams();
 	const isMounted = useRef(true);
+	const [acceptTicketWithouSelectQueueOpen, setAcceptTicketWithouSelectQueueOpen] = useState(false);
 	const { user } = useContext(AuthContext);
 
 	useEffect(() => {
@@ -138,8 +140,32 @@ const TicketListItem = ({ ticket }) => {
 		history.push(`/tickets/${id}`);
 	};
 
+	const queueName = selectedTicket => {
+		let name = null;
+		let color = null;
+		user.queues.forEach(userQueue => {
+			if (userQueue.id === selectedTicket.queueId) {
+				name = userQueue.name;
+				color = userQueue.color;
+			}
+		});
+		return {
+			name,
+			color
+		};
+	}
+
+	const handleOpenAcceptTicketWithouSelectQueue = () => {
+		setAcceptTicketWithouSelectQueueOpen(true);
+	};
+
 	return (
 		<React.Fragment key={ticket.id}>
+			<AcceptTicketWithouSelectQueue
+				modalOpen={acceptTicketWithouSelectQueueOpen}
+				onClose={(e) => setAcceptTicketWithouSelectQueueOpen(false)}
+				ticketId={ticket.id}
+			/>
 			<ListItem
 				dense
 				button
@@ -149,16 +175,16 @@ const TicketListItem = ({ ticket }) => {
 				}}
 				selected={ticketId && +ticketId === ticket.id}
 				className={clsx(classes.ticket, {
-					[classes.pendingTicket]: ticket.status === "pending",
+					[classes.pendingTicket]: (ticket.status === "pending"),
 				})}
 			>
 				<Tooltip
 					arrow
 					placement="right"
-					title={ticket.queue?.name || "Sem fila"}
+					title={ticket.queue?.name || queueName(ticket)?.name || "Sem fila"}
 				>
 					<span
-						style={{ backgroundColor: ticket.queue?.color || "#7C7C7C" }}
+						style={{ backgroundColor: ticket.queue?.color || queueName(ticket)?.color || "#7C7C7C" }}
 						className={classes.ticketQueueColor}
 					></span>
 				</Tooltip>
@@ -210,7 +236,7 @@ const TicketListItem = ({ ticket }) => {
 								color="textSecondary"
 							>
 								{ticket.lastMessage ? (
-									<MarkdownWrapper>{ticket.lastMessage}</MarkdownWrapper>
+									<MarkdownWrapper>{ticket.lastMessage.includes('BEGIN:VCARD') ? "VCARD" : ticket.lastMessage}</MarkdownWrapper>
 								) : (
 									<br />
 								)}
@@ -226,7 +252,7 @@ const TicketListItem = ({ ticket }) => {
 						</span>
 					}
 				/>
-				{ticket.status === "pending" && (
+				{(ticket.status === "pending" && ticket.queue !== null) && (
 					<ButtonWithSpinner
 						color="primary"
 						variant="contained"
@@ -238,6 +264,30 @@ const TicketListItem = ({ ticket }) => {
 						{i18n.t("ticketsList.buttons.accept")}
 					</ButtonWithSpinner>
 				)}
+				{(ticket.status === "pending" && (ticket.queue === null || ticket.queue === undefined)) && (
+					<ButtonWithSpinner
+						color="secondary"
+						variant="contained"
+						className={classes.acceptButton}
+						size="small"
+						loading={loading}
+						onClick={e => handleOpenAcceptTicketWithouSelectQueue()}
+					>
+						{i18n.t("ticketsList.buttons.acceptBeforeBot")}
+					</ButtonWithSpinner>
+				)}
+				{/* {ticket.status === "pending" && (
+					<ButtonWithSpinner
+						color="primary"
+						variant="contained"
+						className={classes.acceptButton}
+						size="small"
+						loading={loading}
+						onClick={e => handleAcepptTicket(ticket.id)}
+					>
+						{i18n.t("ticketsList.buttons.accept")}
+					</ButtonWithSpinner>
+				)} */}
 			</ListItem>
 			<Divider variant="inset" component="li" />
 		</React.Fragment>

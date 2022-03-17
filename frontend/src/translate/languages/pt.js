@@ -265,8 +265,15 @@ const messages = {
         noTicketsMessage:
           "Nenhuma conversa encontrada com esse status ou termo pesquisado.",
         buttons: {
-          accept: "Responder",
+          accept: "Aceitar ✅",
+          acceptBeforeBot: "Aceitar ⚠️",
+          start: "Iniciar",
+          cancel: "Cancelar"
         },
+        acceptModal: {
+          title: "Aceitar atendimento",
+          queue: "Escolha a fila"
+        }
       },
       newTicketModal: {
         title: "Nova Conversa",
@@ -407,10 +414,11 @@ const messages = {
         header: {
           assignedTo: "Pessoa Responsável:",
           buttons: {
-            return: "Retornar Conversa",
-            resolve: "Encerrar Conversa",
-            reopen: "Reabrir Conversa",
-            accept: "Aceitar Conversa",
+            return: "Retornar para aguardando",
+            resolve: "Finalizar",
+            reopen: "Reabrir",
+            accept: "Aceitar ✅",
+            acceptBeforeBot: "Aceitar ⚠️",
           },
         },
       },
@@ -453,6 +461,12 @@ const messages = {
           title: "Apagar mensagem?",
           message: "Esta ação não pode ser revertida.",
         },
+      },
+      vCardPreview: {
+        chat: "Conversar"
+      },
+      locationPreview: {
+        view: "Visualizar"
       },
       backendErrors: {
         ERR_NO_OTHER_WHATSAPP: "Deve haver pelo menos um WhatsApp padrão.",
