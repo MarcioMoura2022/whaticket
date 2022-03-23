@@ -433,7 +433,7 @@ const MessageInput = ({ ticketStatus }) => {
         ) : (
           <span>
             {medias[0]?.name}
-            {<img src={medias.preview} alt=""></img>}
+            {<img src={medias[0]?.preview} alt=""></img>}
           </span>
         )}
         <IconButton
