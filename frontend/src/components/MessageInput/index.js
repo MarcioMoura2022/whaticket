@@ -394,6 +394,10 @@ const MessageInput = ({ ticketStatus }) => {
               [classes.replyginSelfMsgSideColor]: !message.fromMe
             })}
           ></span>
+          <span>
+            {medias[0]?.name}
+            {<img src={medias[0]?.preview} alt="TESTE"></img>}
+          </span>
           <div className={classes.replyginMsgBody}>
             {!message.fromMe && (
               <span className={classes.messageContactName}>
